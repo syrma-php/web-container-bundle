@@ -1,2 +1,2 @@
-# web-container-bundle
-Symfony Bundle to SyrmaWebContainer
+# SyrmaWebContainerBundle
+Comming soon ...
