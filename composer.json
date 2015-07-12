@@ -1,0 +1,30 @@
+{
+    "name": "syrma/web-container-bundle",
+    "type": "symfony-bundle",
+    "description": "Conterner of wep applications",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tamás Szijártó",
+            "email": "szijarto.tamas.developer@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "syrma/web-container": "@dev",
+        "symfony/framework-bundle": "~2.3",
+        "symfony/psr-http-message-bridge": "~0.2"
+
+    },
+    "require-dev": {
+        "phpunit/phpunit":  "4.5.*",
+        "fabpot/php-cs-fixer": "1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Syrma\\WebContainerBundle\\": ""
+        }
+    },
+
+    "minimum-stability": "stable"
+}
