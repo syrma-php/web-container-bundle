@@ -1,0 +1,31 @@
+<?xml version = '1.0' ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="syrma.web_container.server.swoole.class">Syrma\WebContainer\Server\Swoole\SwooleServer</parameter>
+        <parameter key="syrma.web_container.server.swoole.options.class">Syrma\WebContainer\Server\Swoole\SwooleServerOptions</parameter>
+        <parameter key="syrma.web_container.server.swoole.message_transformer.class">Syrma\WebContainer\Server\Swoole\SwooleMessageTransformer</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="syrma.web_container.server.swoole" class="%syrma.web_container.server.swoole.class%" public="false">
+            <argument type="service" id="syrma.web_container.server.swoole.message_transformer"/>
+            <argument type="service" id="syrma.web_container.server.swoole.options"/>
+        </service>
+
+        <service id="syrma.web_container.server.swoole.message_transformer" class="%syrma.web_container.server.swoole.message_transformer.class%" public="false">
+            <argument type="service" id="syrma.web_container.psr7.message.factory"/>
+            <!--<argument type="string"/>  useServerRequest -->
+            <!-- <argument type="string"/> responseBuffer -->
+        </service>
+
+        <service id="syrma.web_container.server.swoole.options" class="%syrma.web_container.server.swoole.options.class%" public="false">
+            <argument type="collection"/> <!-- options -->
+        </service>
+
+    </services>
+</container>

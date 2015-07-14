@@ -1,0 +1,46 @@
+<?xml version = '1.0' ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="syrma.web_container.request_handler.registry.class">Syrma\WebContainerBundle\RequestHandler\RequestHandlerRegistry</parameter>
+        <parameter key="syrma.web_container.request_handler.symfony.class">Syrma\WebContainer\RequestHandler\SymfonyRequestHandler</parameter>
+
+        <parameter key="syrma.web_container.factory.http_foundation.class">Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory</parameter>
+        <parameter key="syrma.web_container.factory.diactoros.class">Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory</parameter>
+    </parameters>
+
+    <services>
+
+        <service
+                id="syrma.web_container.request_handler.registry"
+                class="%syrma.web_container.request_handler.registry.class%"
+                />
+
+        <service
+                id="syrma.web_container.factory.http_foundation"
+                class="%syrma.web_container.factory.http_foundation.class%"
+                public="false"
+                />
+
+        <service
+                id="syrma.web_container.factory.diactoros"
+                class="%syrma.web_container.factory.diactoros.class%"
+                public="false"
+                />
+
+        <service
+                id="syrma.web_container.request_handler.symfony"
+                class="%syrma.web_container.request_handler.symfony.class%"
+                public="false"
+                >
+            <argument type="service" id="http_kernel"/>
+            <argument type="service" id="syrma.web_container.factory.http_foundation"/>
+            <argument type="service" id="syrma.web_container.factory.diactoros"/>
+        </service>
+
+
+    </services>
+</container>
