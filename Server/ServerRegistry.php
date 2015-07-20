@@ -3,22 +3,13 @@
 namespace Syrma\WebContainerBundle\Server;
 
 use Syrma\WebContainer\ServerInterface;
+use Syrma\WebContainerBundle\Util\AbstractRegistry;
 
 /**
  * Registry of avaiable servers.
  */
-class ServerRegistry
+class ServerRegistry extends AbstractRegistry
 {
-    /**
-     * @var ServerInterface[]
-     */
-    private $registry = array();
-
-    /**
-     * @var string|null
-     */
-    private $default;
-
     /**
      * @param string          $alias
      * @param ServerInterface $server
@@ -26,11 +17,7 @@ class ServerRegistry
      */
     public function add($alias, ServerInterface $server, $isDefault = false)
     {
-        $this->registry[$alias] = $server;
-
-        if (true === $isDefault) {
-            $this->default = $alias;
-        }
+        $this->doAdd($alias, $server, $isDefault);
     }
 
     /**
@@ -40,15 +27,7 @@ class ServerRegistry
      */
     public function get($alias)
     {
-        if (!isset($this->registry[$alias])) {
-            throw new \InvalidArgumentException(sprintf(
-                'The alias(%s) not found in the registry! Avaiable aliases: %s',
-                $alias,
-                implode(', ',  array_keys($this->registry))
-            ));
-        }
-
-        return $this->registry[$alias];
+        return $this->doGet($alias);
     }
 
     /**
@@ -56,24 +35,6 @@ class ServerRegistry
      */
     public function getDefault()
     {
-        if (empty($this->registry)) {
-            throw new \RuntimeException(
-                'The server registry is empty!'
-            );
-        }
-
-        if (empty($this->default)) {
-            if (0 == count($this->registry)) {
-                $default = key($this->registry);
-            } else {
-                throw new \RuntimeException(
-                    'The default server alias is empty and to many alias found! Please set the default server!'
-                );
-            }
-        } else {
-            $default = $this->default;
-        }
-
-        return $this->get($default);
+        return $this->get( $this->doGetDefault() );
     }
 }
