@@ -3,6 +3,8 @@
 namespace Syrma\WebContainerBundle\Tests\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddRequestHandlerPass;
+use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddServerPass;
 use Syrma\WebContainerBundle\DependencyInjection\SyrmaWebContainerExtension;
 
 class SyrmaWebContainerExtensionTest extends \PHPUnit_Framework_TestCase
@@ -80,7 +82,7 @@ class SyrmaWebContainerExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(array('worker_num' => 5, 'cpu_affinity_ignore' => array('fake')), $optDef->getArgument(0));
 
         $serverDef = $container->findDefinition('syrma.web_container.server.swoole');
-        $tagInfo = $serverDef->getTag('syrma.web_container.server');
+        $tagInfo = $serverDef->getTag(AddServerPass::TAG_NAME);
         $this->assertSame(array(array('default' => true, 'alias' => 'swoole')), $tagInfo);
     }
 
@@ -98,7 +100,7 @@ class SyrmaWebContainerExtensionTest extends \PHPUnit_Framework_TestCase
         $container = $this->buildContainer($config);
 
         $serverDef = $container->findDefinition('syrma.web_container.server.swoole');
-        $tagInfo = $serverDef->getTag('syrma.web_container.server');
+        $tagInfo = $serverDef->getTag(AddServerPass::TAG_NAME);
         $this->assertSame(array(array('default' => false, 'alias' => 'swoole')), $tagInfo);
     }
 
@@ -113,7 +115,7 @@ class SyrmaWebContainerExtensionTest extends \PHPUnit_Framework_TestCase
         $container = $this->buildContainer($config);
 
         $reqHandDef = $container->findDefinition('syrma.web_container.request_handler.symfony');
-        $tagInfo = $reqHandDef->getTag('syrma.web_container.request_handler');
+        $tagInfo = $reqHandDef->getTag(AddRequestHandlerPass::TAG_NAME);
         $this->assertSame(array(array('default' => true, 'alias' => 'symfony')), $tagInfo);
     }
 
@@ -128,7 +130,7 @@ class SyrmaWebContainerExtensionTest extends \PHPUnit_Framework_TestCase
         $container = $this->buildContainer($config);
 
         $reqHandDef = $container->findDefinition('syrma.web_container.request_handler.symfony');
-        $tagInfo = $reqHandDef->getTag('syrma.web_container.request_handler');
+        $tagInfo = $reqHandDef->getTag(AddRequestHandlerPass::TAG_NAME);
         $this->assertSame(array(array('default' => false, 'alias' => 'symfony')), $tagInfo);
     }
 }

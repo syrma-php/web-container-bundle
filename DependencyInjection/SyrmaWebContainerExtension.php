@@ -7,6 +7,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddRequestHandlerPass;
+use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddServerPass;
 
 class SyrmaWebContainerExtension extends Extension
 {
@@ -72,7 +74,7 @@ class SyrmaWebContainerExtension extends Extension
         }
 
         $container->findDefinition('syrma.web_container.server.swoole')
-            ->addTag('syrma.web_container.server', array(
+            ->addTag(AddServerPass::TAG_NAME, array(
                     'default' => 'swoole' == $defaultServer,
                     'alias' => 'swoole',
                 )
@@ -92,7 +94,7 @@ class SyrmaWebContainerExtension extends Extension
         $defaultRequestHandler = isset($config['default']) ? $config['default'] : null;
 
         $container->findDefinition('syrma.web_container.request_handler.symfony')
-            ->addTag('syrma.web_container.request_handler', array(
+            ->addTag(AddRequestHandlerPass::TAG_NAME, array(
                     'default' => 'symfony' == $defaultRequestHandler,
                     'alias' => 'symfony',
                 )

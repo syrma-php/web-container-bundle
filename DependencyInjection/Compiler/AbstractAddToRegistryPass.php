@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 abstract class AbstractAddToRegistryPass implements CompilerPassInterface
 {
+    const EXT_CODE_EMPTY_ALIAS = 1;
+
     /**
      * @param ContainerBuilder $container
      * @param string           $regId
@@ -33,7 +35,7 @@ abstract class AbstractAddToRegistryPass implements CompilerPassInterface
                     'The tag(%s) of service(%s) not contains the "alias" attribute!',
                     $tag,
                     $id
-                ));
+                ), self::EXT_CODE_EMPTY_ALIAS);
             }
 
             $definition->addMethodCall('add', array(

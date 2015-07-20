@@ -9,14 +9,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class AddServerPass extends AbstractAddToRegistryPass
 {
+    const REGISTRY_ID = 'syrma.web_container.server.registry';
+    const TAG_NAME = 'syrma.web_container.server';
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $regId = 'syrma.web_container.server.registry';
-        $tag = 'syrma.web_container.server';
-
-        $this->doProcess($container, $regId, $tag);
+        $this->doProcess($container, self::REGISTRY_ID, self::TAG_NAME);
     }
 }
