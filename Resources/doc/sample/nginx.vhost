@@ -1,0 +1,13 @@
+server {
+    server_name [domain];
+    root  [symfony-web-root]
+
+	location / {
+		include proxy_params;
+		proxy_set_header X-Forwarded-Host "$http_host:$server_port";
+        proxy_pass  http://127.0.0.1:9100$request_uri;
+    }
+
+    error_log /var/log/nginx/syrma.log;
+    access_log /var/log/nginx/syrma.log;
+}
