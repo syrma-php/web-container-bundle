@@ -19,8 +19,8 @@
 
         <service id="syrma.web_container.server.swoole.message_transformer" class="%syrma.web_container.server.swoole.message_transformer.class%" public="false">
             <argument type="service" id="syrma.web_container.psr7.message.factory"/>
-            <!--<argument type="string"/>  useServerRequest -->
-            <!-- <argument type="string"/> responseBuffer -->
+            <argument type="string"/>  <!-- useServerRequest -->
+            <argument type="string"/> <!-- responseBuffer -->
         </service>
 
         <service id="syrma.web_container.server.swoole.options" class="%syrma.web_container.server.swoole.options.class%" public="false">

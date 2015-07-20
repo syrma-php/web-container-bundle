@@ -34,10 +34,11 @@ class Configuration implements ConfigurationInterface
             ->children()
 
                 ->arrayNode('server')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('default')
                             ->info('Alias of the default server')
-                            ->defaultValue(class_exists('\swoole_http_server') ? 'swoole' : null)
+                            ->defaultValue(class_exists('\swoole_http_server') ? 'swoole' : null) // @TODO ServerInterface::isAvaiable
                         ->end()
                         ->append($this->addSwooleServerNode())
                     ->end()
@@ -58,7 +59,7 @@ class Configuration implements ConfigurationInterface
         $node
             ->canBeEnabled()
             ->children()
-                ->arrayNode('transformers')
+                ->arrayNode('transformer')
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('use_server_request')
