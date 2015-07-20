@@ -1,13 +1,12 @@
 <?php
 
-
 namespace Syrma\WebContainerBundle\Util;
 
 /**
- * Registry abstract implementation
+ * Registry abstract implementation.
  */
-abstract class AbstractRegistry {
-
+abstract class AbstractRegistry
+{
     const EXT_CODE_NOT_EXISTS = 1;
     const EXT_CODE_EMPTY = 2;
     const EXT_CODE_TOO_MANY = 3;
@@ -81,5 +80,4 @@ abstract class AbstractRegistry {
 
         return $default;
     }
-
 }

@@ -35,6 +35,6 @@ class ServerRegistry extends AbstractRegistry
      */
     public function getDefault()
     {
-        return $this->get( $this->doGetDefault() );
+        return $this->get($this->doGetDefault());
     }
 }
