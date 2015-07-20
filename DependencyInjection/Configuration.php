@@ -5,6 +5,7 @@ namespace Syrma\WebContainerBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Syrma\WebContainer\Server\Swoole\SwooleServer;
 
 /**
  * Bundle config.
@@ -38,7 +39,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('default')
                             ->info('Alias of the default server')
-                            ->defaultValue(class_exists('\swoole_http_server') ? 'swoole' : null) // @TODO ServerInterface::isAvaiable
+                            ->defaultValue(SwooleServer::isAvaiable() ? 'swoole' : null)
                         ->end()
                         ->append($this->addSwooleServerNode())
                     ->end()

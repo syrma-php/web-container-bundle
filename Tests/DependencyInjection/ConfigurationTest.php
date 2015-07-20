@@ -3,6 +3,7 @@
 namespace Syrma\WebContainerBundle\Tests\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Processor;
+use Syrma\WebContainer\Server\Swoole\SwooleServer;
 use Syrma\WebContainerBundle\DependencyInjection\Configuration;
 
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
@@ -23,7 +24,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(array(
             'server' => array(
-                'default' => class_exists('\swoole_http_server') ? 'swoole' : null, // @TODO ServerInterface::isAvaiable
+                'default' => SwooleServer::isAvaiable() ? 'swoole' : null,
                 'swoole' => array(
                     'enabled' => false,
                     'transformer' => array(
