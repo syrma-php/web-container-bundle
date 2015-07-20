@@ -1,7 +1,7 @@
 {
     "name": "syrma/web-container-bundle",
     "type": "symfony-bundle",
-    "description": "Conterner of wep applications",
+    "description": "Container of wep applications",
     "license": "MIT",
     "authors": [
         {
