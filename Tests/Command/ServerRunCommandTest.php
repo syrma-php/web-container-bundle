@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Syrma\WebContainer\RequestHandlerInterface;
 use Syrma\WebContainer\ServerContextInterface;
 use Syrma\WebContainer\ServerInterface;
+use Syrma\WebContainer\Tests\Server\ServerStub;
 use Syrma\WebContainerBundle\Command\ServerRunCommand;
 use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddRequestHandlerPass;
 use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddServerPass;
@@ -70,16 +71,13 @@ class ServerRunCommandTest extends \PHPUnit_Framework_TestCase
             ->willReturn(42);
         $this->requestHandlerRegistry->add('bar', $mockRequestHandler, true);
 
-        $mockServer = $this->getMock(ServerInterface::class);
-        $mockServer->expects($this->once())
-            ->method('start')
-            ->willReturnCallback(function (ServerContextInterface $context, RequestHandlerInterface $requestHandler) use (&$mockParams) {
-                $mockParams = array(
-                    'address' => $context->getListenAddress(),
-                    'port' => $context->getListenPort(),
-                    'handlerId' => $requestHandler->handle($this->getMock(RequestInterface::class)),
-                );
-            });
+        $mockServer = new ServerStub(function (ServerContextInterface $context, RequestHandlerInterface $requestHandler) use (&$mockParams) {
+            $mockParams = array(
+                'address' => $context->getListenAddress(),
+                'port' => $context->getListenPort(),
+                'handlerId' => $requestHandler->handle($this->getMock(RequestInterface::class)),
+            );
+        });
 
         $this->serverRegistry->add('foo', $mockServer, true);
 
@@ -102,16 +100,14 @@ class ServerRunCommandTest extends \PHPUnit_Framework_TestCase
             ->willReturn(42);
         $this->requestHandlerRegistry->add('bar', $mockRequestHandler, false);
 
-        $mockServer = $this->getMock(ServerInterface::class);
-        $mockServer->expects($this->once())
-            ->method('start')
-            ->willReturnCallback(function (ServerContextInterface $context, RequestHandlerInterface $requestHandler) use (&$mockParams) {
-                $mockParams = array(
-                    'address' => $context->getListenAddress(),
-                    'port' => $context->getListenPort(),
-                    'handlerId' => $requestHandler->handle($this->getMock(RequestInterface::class)),
-                );
-            });
+        $mockServer = new ServerStub(function (ServerContextInterface $context, RequestHandlerInterface $requestHandler) use (&$mockParams) {
+            $mockParams = array(
+                'address' => $context->getListenAddress(),
+                'port' => $context->getListenPort(),
+                'handlerId' => $requestHandler->handle($this->getMock(RequestInterface::class)),
+            );
+        });
+
         $this->serverRegistry->add('foo', $mockServer, false);
 
         $cmd = $this->createCommand();
