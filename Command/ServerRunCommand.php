@@ -7,12 +7,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Syrma\WebContainer\Executor;
-use Syrma\WebContainer\RequestHandlerInterface;
 use Syrma\WebContainer\ServerContext;
 use Syrma\WebContainer\ServerContextInterface;
-use Syrma\WebContainer\ServerInterface;
-use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddRequestHandlerPass;
-use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddServerPass;
+use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddExecutorPass;
 
 /**
  * Run the server.
@@ -44,57 +41,13 @@ class ServerRunCommand extends ContainerAwareCommand
             ),
 
             new InputOption(
-                'serverAlias',
-                null,
+                'executor',
+                'x',
                 InputOption::VALUE_OPTIONAL,
-                'Alias of the server'
+                'Alias of the executor'
             ),
 
-            new InputOption(
-                'requestHandlerAlias',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Alias of the requestHandler'
-            ),
         ));
-    }
-
-    /**
-     * @param string|null $alias
-     *
-     * @return ServerInterface
-     */
-    protected function getServer($alias)
-    {
-        $serverRegistry = $this->getContainer()->get(AddServerPass::REGISTRY_ID);
-
-        return empty($alias) ? $serverRegistry->getDefault() : $serverRegistry->get($alias);
-    }
-
-    /**
-     * @param string|null $alias
-     *
-     * @return RequestHandlerInterface
-     */
-    protected function getRequestHandler($alias)
-    {
-        $reqHandRegistry = $this->getContainer()->get(AddRequestHandlerPass::REGISTRY_ID);
-
-        return empty($alias) ? $reqHandRegistry->getDefault() : $reqHandRegistry->get($alias);
-    }
-
-    /**
-     * @param string|null $serverAlias
-     * @param string|null $reqHandlerAlias
-     *
-     * @return Executor
-     */
-    protected function createExecutor($serverAlias, $reqHandlerAlias)
-    {
-        return new Executor(
-            $this->getServer($serverAlias),
-            $this->getRequestHandler($reqHandlerAlias)
-        );
     }
 
     /**
@@ -109,15 +62,24 @@ class ServerRunCommand extends ContainerAwareCommand
     }
 
     /**
+     * @param string|null $alias
+     *
+     * @return Executor
+     */
+    private function getExecutor($alias)
+    {
+        $registry = $this->getContainer()->get(AddExecutorPass::REGISTRY_ID);
+
+        return empty($alias) ? $registry->getDefault() : $registry->get($alias);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->createExecutor(
-            $input->getOption('serverAlias'),
-            $input->getOption('requestHandlerAlias')
-        )
-        ->execute($this->createContext(
+        $executor = $this->getExecutor($input->getOption('executor'));
+        $executor->execute($this->createContext(
                 $input->getOption('listenAddress'),
                 $input->getOption('listenPort')
             )

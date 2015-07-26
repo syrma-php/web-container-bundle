@@ -6,40 +6,32 @@ use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Container;
+use Syrma\WebContainer\ExceptionHandlerInterface;
+use Syrma\WebContainer\Executor;
 use Syrma\WebContainer\RequestHandlerInterface;
 use Syrma\WebContainer\ServerContextInterface;
-use Syrma\WebContainer\ServerInterface;
 use Syrma\WebContainer\Tests\Server\ServerStub;
 use Syrma\WebContainerBundle\Command\ServerRunCommand;
-use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddRequestHandlerPass;
-use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddServerPass;
-use Syrma\WebContainerBundle\RequestHandler\RequestHandlerRegistry;
-use Syrma\WebContainerBundle\Server\ServerRegistry;
+use Syrma\WebContainerBundle\DependencyInjection\Compiler\AddExecutorPass;
+use Syrma\WebContainerBundle\Executor\ExecutorRegistry;
 
 class ServerRunCommandTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var ServerRegistry
+     * @var ExecutorRegistry
      */
-    protected $serverRegistry;
-
-    /**
-     * @var RequestHandlerRegistry
-     */
-    protected $requestHandlerRegistry;
+    protected $executorRegistry;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->serverRegistry = new ServerRegistry();
-        $this->requestHandlerRegistry = new RequestHandlerRegistry();
+        $this->executorRegistry = new ExecutorRegistry();
     }
 
     protected function getContainerServices()
     {
         return array(
-            AddServerPass::REGISTRY_ID => $this->serverRegistry,
-            AddRequestHandlerPass::REGISTRY_ID => $this->requestHandlerRegistry,
+            AddExecutorPass::REGISTRY_ID => $this->executorRegistry,
         );
     }
 
@@ -69,7 +61,6 @@ class ServerRunCommandTest extends \PHPUnit_Framework_TestCase
         $mockRequestHandler->expects($this->once())
             ->method('handle')
             ->willReturn(42);
-        $this->requestHandlerRegistry->add('bar', $mockRequestHandler, true);
 
         $mockServer = new ServerStub(function (ServerContextInterface $context, RequestHandlerInterface $requestHandler) use (&$mockParams) {
             $mockParams = array(
@@ -79,7 +70,8 @@ class ServerRunCommandTest extends \PHPUnit_Framework_TestCase
             );
         });
 
-        $this->serverRegistry->add('foo', $mockServer, true);
+        $executor = new Executor($mockServer, $mockRequestHandler, $this->getMock(ExceptionHandlerInterface::class));
+        $this->executorRegistry->add('fooBar', $executor, true);
 
         $cmd = $this->createCommand();
         $cmd->run(new ArrayInput(array()), new NullOutput());
@@ -98,7 +90,6 @@ class ServerRunCommandTest extends \PHPUnit_Framework_TestCase
         $mockRequestHandler->expects($this->once())
             ->method('handle')
             ->willReturn(42);
-        $this->requestHandlerRegistry->add('bar', $mockRequestHandler, false);
 
         $mockServer = new ServerStub(function (ServerContextInterface $context, RequestHandlerInterface $requestHandler) use (&$mockParams) {
             $mockParams = array(
@@ -108,14 +99,14 @@ class ServerRunCommandTest extends \PHPUnit_Framework_TestCase
             );
         });
 
-        $this->serverRegistry->add('foo', $mockServer, false);
+        $executor = new Executor($mockServer, $mockRequestHandler, $this->getMock(ExceptionHandlerInterface::class));
+        $this->executorRegistry->add('fooBar', $executor, false);
 
         $cmd = $this->createCommand();
         $cmd->run(new ArrayInput(array(
             '--listenAddress' => '1.1.1.1',
             '--listenPort' => 8080,
-            '--serverAlias' => 'foo',
-            '--requestHandlerAlias' => 'bar',
+            '--executor' => 'fooBar',
         )), new NullOutput());
 
         $this->assertEquals(array(

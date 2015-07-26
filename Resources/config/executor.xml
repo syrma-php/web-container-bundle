@@ -1,0 +1,38 @@
+<?xml version = '1.0' ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="syrma.web_container.executor.registry.class">Syrma\WebContainerBundle\Executor\ExecutorRegistry</parameter>
+        <parameter key="syrma.web_container.executor.factory.class">Syrma\WebContainerBundle\Executor\ExecutorFactory</parameter>
+        <parameter key="syrma.web_container.executor.class">Syrma\WebContainer\Executor</parameter>
+    </parameters>
+
+    <services>
+
+        <service
+                id="syrma.web_container.executor.registry"
+                class="%syrma.web_container.executor.registry.class%"
+                />
+
+        <service id="syrma.web_container.executor.factory" class="%syrma.web_container.executor.factory.class%">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="syrma.web_container.server.registry" />
+            <argument type="service" id="syrma.web_container.request_handler.registry" />
+            <argument type="string">%syrma.web_container.executor.class%</argument>
+        </service>
+
+        <service id="syrma.web_container.executor.abstract" class="%syrma.web_container.executor.class%" abstract="true">
+            <argument type="string"/> <!-- server -->
+            <argument type="string"/> <!-- requestHandler -->
+            <argument type="string"/> <!-- exceptionHandler -->
+            <call method="setLogger">
+                <argument type="service" on-invalid="null" strict="false" id="logger" />
+            </call>
+            <tag name="monolog.logger" channel="syrma.webContainer" />
+        </service>
+
+    </services>
+</container>

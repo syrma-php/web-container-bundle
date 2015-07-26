@@ -5,12 +5,12 @@ namespace Syrma\WebContainerBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Collect the tagged service, and setup for ServerRegistry.
+ * Collect the tagged service, and setup for ExecutorRegistry.
  */
-class AddServerPass extends AbstractAddToRegistryPass
+class AddExecutorPass extends AbstractAddToRegistryPass
 {
-    const REGISTRY_ID = 'syrma.web_container.server.registry';
-    const TAG_NAME = 'syrma.web_container.server';
+    const REGISTRY_ID = 'syrma.web_container.executor.registry';
+    const TAG_NAME = 'syrma.web_container.executor';
 
     /**
      * {@inheritdoc}

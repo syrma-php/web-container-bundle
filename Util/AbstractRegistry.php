@@ -60,7 +60,7 @@ abstract class AbstractRegistry
     {
         if (empty($this->registry)) {
             throw new \RuntimeException(
-                'The registry is empty!',
+                sprintf('The registry(%s) is empty!', get_class($this)),
                 self::EXT_CODE_EMPTY
             );
         }

@@ -1,0 +1,29 @@
+<?xml version = '1.0' ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="syrma.web_container.error_page_loader.class">Syrma\WebContainer\Util\ErrorPageLoader</parameter>
+        <parameter key="syrma.web_container.exception_handler.default.class">Syrma\WebContainer\Exception\DefaultExceptionHandler</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="syrma.web_container.error_page_loader" class="%syrma.web_container.error_page_loader.class%" public="false" >
+            <argument type="string"/> <!-- templatePath -->
+        </service>
+
+        <service id="syrma.web_container.exception_handler.default" class="%syrma.web_container.exception_handler.default.class%" public="false" >
+            <argument type="service" id="syrma.web_container.psr7.message.factory" />
+            <argument type="service" id="syrma.web_container.error_page_loader" />
+            <call method="setLogger">
+                <argument type="service" on-invalid="null" strict="false" id="logger" />
+            </call>
+            <tag name="monolog.logger" channel="syrma.webContainer" />
+        </service>
+
+        <service id="syrma.web_container.exception_handler" alias="syrma.web_container.exception_handler.default"/>
+    </services>
+</container>

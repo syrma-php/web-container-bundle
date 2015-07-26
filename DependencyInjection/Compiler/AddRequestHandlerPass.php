@@ -5,7 +5,7 @@ namespace Syrma\WebContainerBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Collect the taggad service, and setup for RequestHandler.
+ * Collect the tagged service, and setup for RequestHandlerRegistry.
  */
 class AddRequestHandlerPass extends AbstractAddToRegistryPass
 {
