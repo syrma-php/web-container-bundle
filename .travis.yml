@@ -19,8 +19,19 @@ matrix:
     - php: 5.6
       env: SYMFONY_VERSION=2.7.*
 
+    - php: nightly
+      env:
+        - FORCE_ADD_SWOOLE=1
+        - SYMFONY_VERSION=2.6.*
+    - php: nightly
+      env:
+        - FORCE_ADD_SWOOLE=1
+        - SYMFONY_VERSION=2.7.*
+
+
 install:
     - pecl install -f swoole
+    - if [ "$FORCE_ADD_SWOOLE" != "" ]; then echo 'extension = "swoole.so"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini; fi;
     - composer self-update
     - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/framework-bundle:${SYMFONY_VERSION}" --no-update; fi;
     - composer install
