@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "syrma/web-container": "@dev",
+        "syrma/web-container": "dev-master",
         "symfony/framework-bundle": "~2.3",
         "symfony/psr-http-message-bridge": "~0.2"
 
