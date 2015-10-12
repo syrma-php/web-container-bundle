@@ -6,7 +6,7 @@
 
     <parameters>
         <parameter key="syrma.web_container.request_handler.registry.class">Syrma\WebContainerBundle\RequestHandler\RequestHandlerRegistry</parameter>
-        <parameter key="syrma.web_container.request_handler.symfony.class">Syrma\WebContainer\RequestHandler\SymfonyRequestHandler</parameter>
+        <parameter key="syrma.web_container.request_handler.symfony.class">Syrma\WebContainerBundle\RequestHandler\SymfonyRequestHandler</parameter>
 
         <parameter key="syrma.web_container.factory.http_foundation.class">Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory</parameter>
         <parameter key="syrma.web_container.factory.diactoros.class">Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory</parameter>
